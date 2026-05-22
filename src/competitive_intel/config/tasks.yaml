@@ -1,0 +1,96 @@
+market_research_task:
+  description: >
+    Research the {industry} market landscape for {company_name}.
+    Using web search, gather data published in the last 2 years on:
+    - Total market size (in USD) and projected growth rate (CAGR)
+    - Key structural trends shaping the market (minimum 3 named trends)
+    - TAM (Total Addressable Market) and SAM (Serviceable Addressable Market) estimates
+    - Major market drivers and headwinds
+    Focus on quantitative data from credible sources (analyst reports, industry publications,
+    company filings). Avoid opinion pieces and unverified estimates.
+  expected_output: >
+    A structured market overview containing:
+    - Market size figure with source and year
+    - CAGR percentage with projected timeframe
+    - 3-5 named trends with a 2-3 sentence explanation each
+    - TAM and SAM estimates with methodology note
+    - A 2-paragraph executive summary of the market landscape
+  agent: market_analyst
+
+
+competitor_research_task:
+  description: >
+    Profile each competitor listed in {competitors} operating in the {industry} market.
+    For each competitor, research and document:
+    - Key product strengths and differentiators
+    - Notable weaknesses or gaps in their offering
+    - Pricing model and known price points (freemium, subscription tiers, enterprise, etc.)
+    - Market positioning statement — how they present themselves to customers
+    - Primary target customer segment
+    Use web search to find current information (last 2 years). Cover every competitor
+    in the list — do not skip any.
+  expected_output: >
+    One clearly labeled profile per competitor, each containing all five dimensions:
+    strengths, weaknesses, pricing, positioning, and target customer.
+    Format each profile as:
+
+    ## [Competitor Name]
+    - Strengths: ...
+    - Weaknesses: ...
+    - Pricing: ...
+    - Positioning: ...
+    - Target Customer: ...
+
+    End with a one-paragraph comparative summary noting the most significant
+    competitive differentiators across the group.
+  agent: competitor_analyst
+
+
+strategy_report_task:
+  description: >
+    You have been provided with two research streams:
+    MARKET RESEARCH: {market_data}
+    COMPETITOR ANALYSIS: {competitor_data}
+
+    Synthesize both into a strategic brief for {company_name} in the {industry} industry.
+    You must:
+    1. Classify the market sentiment as exactly one of: 'growth' or 'competitive'
+        - 'growth': fast-growing market, significant whitespace, first-mover opportunities
+        - 'competitive': saturated market, differentiation required, defensive positioning needed
+    2. Provide a one-sentence justification for your sentiment classification
+    3. Extract 5-7 key strategic insights from the combined research
+    4. Write a strategic summary paragraph (3-5 sentences) tying insights together
+  expected_output: >
+    A strategic brief containing:
+    - SENTIMENT: [growth|competitive] — [one sentence justification]
+    - KEY INSIGHTS:
+      1. [insight]
+      2. [insight]
+      ... (5-7 total)
+    - STRATEGIC SUMMARY: [3-5 sentence paragraph]
+  agent: strategy_writer
+
+
+final_review_task:
+  description: >
+    Using the strategy report provided below, produce a complete competitive intelligence
+    report for {company_name} in the {industry} industry.
+
+    STRATEGY REPORT: {strategy_report}
+
+    The report must contain all 6 sections with substantive content:
+    1. Executive Summary — 2-3 paragraph overview of findings and recommendations
+    2. Market Overview — size, growth rate, key trends, TAM/SAM
+    3. Competitor Analysis — profile of each major competitor with strengths/weaknesses
+    4. Strategic Insights — minimum 5 distinct, actionable insights
+    5. Risk Factors — minimum 3 specific risks with mitigation notes
+    6. Recommendations — concrete next steps prioritized by impact
+
+    Do not use placeholder text. Every section must be substantively complete.
+  expected_output: >
+    A complete competitive intelligence report with all 6 sections fully populated.
+    Strategic Insights must contain at least 5 items.
+    Risk Factors must contain at least 3 items.
+    The report should be written in professional, executive-ready prose
+    suitable for presentation to a board or senior leadership team.
+  agent: report_writer
