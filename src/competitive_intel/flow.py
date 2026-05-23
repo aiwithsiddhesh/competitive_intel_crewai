@@ -106,6 +106,7 @@ class IntelligenceFlow(Flow[IntelligenceState]):
             inputs={
                 "company_name": self.state.company_name,
                 "industry": self.state.industry,
+                "competitors": ", ".join(self.state.competitors),
                 "strategy_report": self.state.strategy_report,
             }
         )

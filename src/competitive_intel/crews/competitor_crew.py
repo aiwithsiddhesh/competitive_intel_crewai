@@ -25,6 +25,7 @@ class CompetitorResearchCrew:
     def competitor_research_task(self) -> Task:
         return Task(
             config=self.tasks_config["competitor_research_task"],
+            agent=self.competitor_analyst(),
         )
 
     @crew

@@ -23,6 +23,7 @@ class StrategyCrew:
     def strategy_report_task(self) -> Task:
         return Task(
             config=self.tasks_config["strategy_report_task"],
+            agent=self.strategy_writer(),
         )
 
     @crew

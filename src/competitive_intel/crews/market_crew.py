@@ -25,6 +25,7 @@ class MarketResearchCrew:
     def market_research_task(self) -> Task:
         return Task(
             config=self.tasks_config["market_research_task"],
+            agent=self.market_analyst(),
         )
 
     @crew

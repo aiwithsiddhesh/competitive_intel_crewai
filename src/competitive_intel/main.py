@@ -1,92 +1,94 @@
-#!/usr/bin/env python
+import shutil
 from pathlib import Path
 
-from pydantic import BaseModel
+from dotenv import load_dotenv
 
-from crewai.flow import Flow, listen, start
+from competitive_intel.flow import IntelligenceFlow
+from competitive_intel.models import CompetitiveReport
 
-from competitive_intel.crews.content_crew.content_crew import ContentCrew
-
-
-class ContentState(BaseModel):
-    topic: str = ""
-    outline: str = ""
-    draft: str = ""
-    final_post: str = ""
+load_dotenv()
 
 
-class ContentFlow(Flow[ContentState]):
+def _format_markdown(report: CompetitiveReport, company: str, industry: str) -> str:
+    mo = report.market_overview
+    lines = [
+        f"# Competitive Intelligence Report: {company}",
+        f"**Industry:** {industry}\n",
+        "## Executive Summary",
+        report.executive_summary,
+        "\n## Market Overview",
+        f"- **Market Size:** {mo.market_size}",
+        f"- **Growth Rate:** {mo.growth_rate}",
+        f"- **TAM/SAM:** {mo.tam_sam_estimate}",
+        "\n**Key Trends:**",
+    ]
+    for trend in mo.key_trends:
+        lines.append(f"- {trend}")
 
-    @start()
-    def plan_content(self, crewai_trigger_payload: dict = None):
-        print("Planning content")
+    lines.append("\n## Competitor Profiles")
+    for cp in report.competitor_profiles:
+        lines.append(f"\n### {cp.name}")
+        lines.append(f"- **Strengths:** {', '.join(cp.strengths)}")
+        lines.append(f"- **Weaknesses:** {', '.join(cp.weaknesses)}")
+        lines.append(f"- **Pricing:** {cp.pricing_model}")
+        lines.append(f"- **Market Position:** {cp.market_position}")
 
-        if crewai_trigger_payload:
-            self.state.topic = crewai_trigger_payload.get("topic", "AI Agents")
-            print(f"Using trigger payload: {crewai_trigger_payload}")
-        else:
-            self.state.topic = "AI Agents"
+    lines.append("\n## Strategic Insights")
+    for i, insight in enumerate(report.strategic_insights, 1):
+        lines.append(f"{i}. {insight}")
 
-        print(f"Topic: {self.state.topic}")
+    lines.append("\n## Risk Factors")
+    for i, risk in enumerate(report.risk_factors, 1):
+        lines.append(f"{i}. {risk}")
 
-    @listen(plan_content)
-    def generate_content(self):
-        print(f"Generating content on: {self.state.topic}")
-        result = (
-            ContentCrew()
-            .crew()
-            .kickoff(inputs={"topic": self.state.topic})
-        )
+    lines.append("\n## Recommendations")
+    for i, rec in enumerate(report.recommendations, 1):
+        lines.append(f"{i}. {rec}")
 
-        print("Content generated")
-        self.state.final_post = result.raw
+    return "\n".join(lines)
 
-    @listen(generate_content)
-    def save_content(self):
-        print("Saving content")
-        output_dir = Path("output")
-        output_dir.mkdir(exist_ok=True)
-        with open(output_dir / "post.md", "w") as f:
-            f.write(self.state.final_post)
-        print("Post saved to output/post.md")
+
+def run():
+    company = "Notion"
+    industry = "Productivity Software"
+
+    flow = IntelligenceFlow()
+
+    viz_dir = Path("flow_visualization")
+    viz_dir.mkdir(exist_ok=True)
+    temp_dir = Path(flow.plot("flow_visualization.html")).parent
+    for f in temp_dir.iterdir():
+        shutil.copy(f, viz_dir / f.name)
+
+    flow.kickoff(inputs={
+        "company_name": company,
+        "industry": industry,
+        "competitors": ["Obsidian", "Confluence", "Coda", "Roam Research"],
+    })
+
+    report = flow.state.final_report
+
+    md = _format_markdown(report, company, industry)
+    Path("reports/competitive_report.md").write_text(md, encoding="utf-8")
+
+    print(md)
+    print("\n" + "=" * 60)
+    print("Report saved to: reports/competitive_report.md")
+    print("Flow visualization: flow_visualization/flow_visualization.html")
+    print("=" * 60 + "\n")
 
 
 def kickoff():
-    content_flow = ContentFlow()
-    content_flow.kickoff()
+    run()
 
 
 def plot():
-    content_flow = ContentFlow()
-    content_flow.plot()
-
-
-def run_with_trigger():
-    """
-    Run the flow with trigger payload.
-    """
-    import json
-    import sys
-
-    # Get trigger payload from command line argument
-    if len(sys.argv) < 2:
-        raise Exception("No trigger payload provided. Please provide JSON payload as argument.")
-
-    try:
-        trigger_payload = json.loads(sys.argv[1])
-    except json.JSONDecodeError:
-        raise Exception("Invalid JSON payload provided as argument")
-
-    # Create flow and kickoff with trigger payload
-    # The @start() methods will automatically receive crewai_trigger_payload parameter
-    content_flow = ContentFlow()
-
-    try:
-        result = content_flow.kickoff({"crewai_trigger_payload": trigger_payload})
-        return result
-    except Exception as e:
-        raise Exception(f"An error occurred while running the flow with trigger: {e}")
+    viz_dir = Path("flow_visualization")
+    viz_dir.mkdir(exist_ok=True)
+    temp_dir = Path(IntelligenceFlow().plot("flow_visualization.html")).parent
+    for f in temp_dir.iterdir():
+        shutil.copy(f, viz_dir / f.name)
 
 
 if __name__ == "__main__":
-    kickoff()
+    run()

@@ -1,3 +1,5 @@
+from typing import Any, Tuple
+
 from crewai import Agent, Crew, Process, Task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from crewai.project import CrewBase, agent, crew, task
@@ -5,7 +7,7 @@ from crewai.project import CrewBase, agent, crew, task
 from competitive_intel.models import CompetitiveReport
 
 
-def validate_report_completeness(result) -> tuple[bool, CompetitiveReport | str]:
+def validate_report_completeness(result) -> Tuple[bool, Any]:
     report = result.pydantic
 
     if not isinstance(report, CompetitiveReport):
@@ -68,8 +70,8 @@ class ReviewCrew:
     def final_review_task(self) -> Task:
         return Task(
             config=self.tasks_config["final_review_task"],
+            agent=self.report_writer(),
             output_pydantic=CompetitiveReport,
-            output_file="reports/competitive_report.md",
             guardrail=validate_report_completeness,
             guardrail_max_retries=3,
         )
@@ -77,7 +79,7 @@ class ReviewCrew:
     @crew
     def crew(self) -> Crew:
         return Crew(
-            agents=self.agents,
+            agents=[self.report_writer(), self.fact_checker()],
             tasks=self.tasks,
             process=Process.hierarchical,
             manager_agent=self.senior_analyst(),
