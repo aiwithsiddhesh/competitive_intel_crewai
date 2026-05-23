@@ -28,6 +28,20 @@ class MarketResearchCrew:
             agent=self.market_analyst(),
         )
 
+    @task
+    def market_sizing_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["market_sizing_task"],
+            agent=self.market_analyst(),
+        )
+
+    @task
+    def market_trend_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["market_trend_analysis_task"],
+            agent=self.market_analyst(),
+        )
+
     @crew
     def crew(self) -> Crew:
         return Crew(

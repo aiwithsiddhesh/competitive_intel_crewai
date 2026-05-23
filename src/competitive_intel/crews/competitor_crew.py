@@ -28,6 +28,20 @@ class CompetitorResearchCrew:
             agent=self.competitor_analyst(),
         )
 
+    @task
+    def competitor_ranking_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["competitor_ranking_task"],
+            agent=self.competitor_analyst(),
+        )
+
+    @task
+    def competitive_gap_analysis_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["competitive_gap_analysis_task"],
+            agent=self.competitor_analyst(),
+        )
+
     @crew
     def crew(self) -> Crew:
         return Crew(

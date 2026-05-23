@@ -10,11 +10,12 @@ This project replaces that manual workflow with an **AI-powered multi-agent syst
 
 Given three inputs — a company name, a target industry, and a list of competitors — the system:
 
-- Researches the market landscape using live web search: size, growth rate, CAGR, key trends, and TAM/SAM estimates
-- Profiles each competitor individually: strengths, weaknesses, pricing model, and market positioning
+- Researches the market landscape in three steps: raw web search → TAM/SAM sizing with methodology → trend ranking by impact
+- Profiles each competitor in three steps: individual profiles → threat ranking by score → whitespace and gap analysis
 - Synthesizes both research streams into key strategic insights and classifies the market sentiment
 - Routes execution based on that sentiment — growth markets get an opportunity-focused strategy; competitive markets get a defense and differentiation strategy
-- Passes the draft through a hierarchical review team that rewrites, fact-checks, and validates the report
+- Develops strategy in three steps: strategic brief → SWOT analysis → prioritized 90-day action plan
+- Passes the strategy through a three-stage review: first-draft writing → fact-checking → final validation with guardrail
 - Saves a structured 6-section intelligence report to markdown
 
 ### Who it is for
@@ -86,9 +87,9 @@ flowchart TD
 
 As soon as the flow starts, two crews are launched simultaneously — no waiting for one to finish before the other begins.
 
-The **Market Research Crew** searches the web for industry-level data: total addressable market, serviceable addressable market, compound annual growth rate, key industry trends, and emerging threats. It focuses on the big picture — where the market is, where it is going, and how fast.
+The **Market Research Crew** runs three tasks in sequence. First it searches the web for industry-level data: total addressable market, serviceable addressable market, compound annual growth rate, key industry trends, and emerging threats. The second task structures and validates the TAM/SAM figures — cross-referencing sources, resolving conflicting estimates, and documenting the sizing methodology. The third task ranks every identified trend by current impact and 3-year trajectory, flags potential market disruptions, and identifies which player is best positioned for each trend.
 
-The **Competitor Research Crew** searches for intelligence on each named competitor: their product positioning, notable strengths, known weaknesses, pricing model, and where they sit in the competitive landscape. Each competitor is profiled individually so the final report can speak to them specifically.
+The **Competitor Research Crew** also runs three tasks. The first profiles each named competitor individually: product strengths, weaknesses, pricing model, positioning, and target customer. The second task scores every competitor on market share momentum, product completeness, pricing aggressiveness, and brand strength, producing a ranked threat table and spotlighting the primary threat. The third task identifies market whitespace — underserved customer segments, capability gaps across the competitor landscape, and the top expansion opportunities for the target company.
 
 Both crews use live web search via SerperDev, so the output reflects current data rather than the model's training knowledge.
 
@@ -106,15 +107,17 @@ A **growth opportunity** triggers an opportunity-focused brief: where to expand,
 
 A **competitive threat** triggers a defense and differentiation brief: how to protect existing position, where to sharpen the product, which competitor moves to watch closely.
 
-Both paths use the same Strategy Crew, but the framing, tone, and recommendations differ based on what the market actually calls for. This prevents the system from producing generic advice — the strategy is shaped by the evidence.
+Both paths use the same Strategy Crew, which runs three tasks. The first task writes a strategic brief — classifying market sentiment, extracting 5–7 key insights, and writing a synthesis paragraph. The second task builds a full SWOT analysis for the target company, grounded in the research rather than assumptions. The third task converts the SWOT into a prioritized 90-day action plan: six to nine concrete actions organized into three 30-day phases, each with an owner, a measurable KPI, and a link back to a specific insight or SWOT item.
+
+This multi-step approach prevents the system from producing generic advice — the strategy is built up from evidence at each layer rather than written in a single pass.
 
 ### Stage 4 — Hierarchical Review
 
-The strategy draft enters a **three-agent review crew** running in hierarchical mode. A Senior Analyst acts as manager: it reads the draft, decides what needs to be done, and delegates specific tasks to two specialists — a Report Writer who restructures and polishes the content, and a Fact Checker who validates claims against the source research.
+The strategy output enters a **three-agent review crew** running in hierarchical mode, with three explicit tasks. First, the Report Writer composes a complete first-draft intelligence report from the strategy output — all six sections, in professional prose, covering every named competitor. Second, the Fact Checker reviews that draft: flagging unsupported numerical claims, missing competitor profiles, internal contradictions, and thin sections, then delivering a corrected version with every issue resolved. Third, the final review task produces the publication-ready report.
 
-The manager does not write the report itself. It directs the work, reviews the specialists' output, and decides when the report meets the standard. This mirrors how a real editorial team operates.
+A Senior Analyst acts as manager throughout: it reads the work at each stage, decides what needs attention, and delegates accordingly. The manager does not write the report itself — it directs the work and decides when the output meets the standard.
 
-A **guardrail** enforces a completeness check before any output is accepted: all six required sections must be present, strategic insights must number at least five, and risk factors must number at least three. If the output falls short, the crew is asked to retry — up to three times — before the pipeline fails. This prevents partial or thin reports from being saved as final output.
+A **guardrail** enforces a completeness check on the final output: all six required sections must be present, strategic insights must number at least five, and risk factors must number at least three. If the output falls short, the crew retries — up to three times — before the pipeline fails. This prevents partial or thin reports from being saved as final output.
 
 ### Stage 5 — Structured Output
 
@@ -138,7 +141,7 @@ The validated report is saved as both a Pydantic model (guaranteeing structural 
         ├── models.py                     ← Pydantic state and output models
         ├── config/
         │   ├── agents.yaml               ← 6 agent definitions
-        │   └── tasks.yaml                ← 4 task definitions
+        │   └── tasks.yaml                ← 12 task definitions (3 per crew)
         └── crews/
             ├── market_crew.py            ← MarketResearchCrew
             ├── competitor_crew.py        ← CompetitorResearchCrew

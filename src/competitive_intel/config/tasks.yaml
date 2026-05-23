@@ -17,6 +17,41 @@ market_research_task:
     - A 2-paragraph executive summary of the market landscape
 
 
+market_sizing_task:
+  description: >
+    Using the raw market research gathered in the previous task, structure and validate
+    the market sizing data for the {industry} industry.
+    - Calculate and validate TAM (Total Addressable Market) with clear methodology
+    - Calculate SAM (Serviceable Addressable Market) with segmentation rationale
+    - Cross-reference at least 2 data sources for each estimate
+    - Identify any conflicting estimates and explain which is most credible and why
+    - Quantify growth trajectory with CAGR breakdown by sub-segment if available
+  expected_output: >
+    A structured market sizing report containing:
+    - TAM estimate (USD) with calculation methodology and source citations
+    - SAM estimate (USD) with segmentation criteria explained
+    - CAGR figure with projected timeframe and source
+    - Data credibility assessment — which sources were used, any conflicts resolved
+    - One-paragraph summary of the overall market sizing picture
+
+
+market_trend_analysis_task:
+  description: >
+    Using the market research and sizing data from the previous tasks, perform a deep
+    trend analysis for the {industry} industry.
+    - Identify minimum 5 named trends currently shaping the market
+    - Rank each trend by: (a) current impact and (b) 3-year growth trajectory
+    - For each trend, identify which competitor or market participant is best positioned to exploit it
+    - Flag any emerging disruptions or wildcards that could reshape the market
+  expected_output: >
+    A ranked trend analysis report containing:
+    - 5+ trends listed from highest to lowest current impact
+    - For each trend: name, 2-sentence description, impact score (High/Medium/Low),
+      3-year trajectory (Accelerating/Stable/Declining), and best-positioned player
+    - A wildcards section with 1-2 potential disruptions and their estimated probability
+    - A one-paragraph conclusion on the dominant trend theme for this market
+
+
 competitor_research_task:
   description: >
     Profile each competitor listed in {competitors} operating in the {industry} market.
@@ -44,6 +79,39 @@ competitor_research_task:
     competitive differentiators across the group.
 
 
+competitor_ranking_task:
+  description: >
+    Using the competitor profiles gathered in the previous task, rank each competitor
+    in the {industry} market by their threat level to {company_name}.
+    - Score each competitor on: market share momentum, product completeness,
+      pricing aggressiveness, and brand strength (1-5 scale each)
+    - Compute an overall threat score and rank competitors from highest to lowest threat
+    - For the #1 threat: write a 3-sentence "why they are dangerous" summary
+    - Identify any competitor showing signs of weakness or market exit signals
+  expected_output: >
+    A competitor threat ranking containing:
+    - Ranked table: Competitor | Market Share Momentum | Product | Pricing | Brand | Total Score
+    - #1 Threat spotlight: 3-sentence summary of why they are the primary threat
+    - Weakness watch: any competitor showing vulnerability (1-2 sentences each)
+    - One-paragraph strategic implication for {company_name}
+
+
+competitive_gap_analysis_task:
+  description: >
+    Using the competitor profiles and threat ranking from the previous tasks, identify
+    market whitespace and opportunity gaps in the {industry} market.
+    - Identify at least 3 underserved customer segments no competitor fully addresses
+    - Identify at least 3 feature or capability gaps across the competitor landscape
+    - Map each gap to its potential revenue impact (High/Medium/Low)
+    - Recommend which gaps represent the best entry or expansion opportunities for {company_name}
+  expected_output: >
+    A competitive gap analysis containing:
+    - Underserved segments table: Segment | Who Partially Serves It | What's Missing | Revenue Impact
+    - Feature gaps table: Capability | Current Best-in-Class | Gap Description | Impact
+    - Top 3 recommended opportunities for {company_name} with rationale
+    - A one-paragraph executive summary of the competitive whitespace landscape
+
+
 strategy_report_task:
   description: >
     You have been provided with two research streams:
@@ -68,20 +136,105 @@ strategy_report_task:
     - STRATEGIC SUMMARY: [3-5 sentence paragraph]
 
 
-final_review_task:
+swot_analysis_task:
   description: >
-    Using the strategy report provided below, produce a complete competitive intelligence
-    report for {company_name} in the {industry} industry.
+    Using the strategic brief from the previous task, conduct a full SWOT analysis for
+    {company_name} in the {industry} market.
+    - Strengths: internal advantages {company_name} can leverage (minimum 3)
+    - Weaknesses: internal gaps or liabilities to address (minimum 3)
+    - Opportunities: external market conditions favouring {company_name} (minimum 3)
+    - Threats: external forces that could harm {company_name} (minimum 3)
+    Base every point on evidence from the market data, competitor data, and strategic
+    insights in the previous task — do not introduce unverified assumptions.
+  expected_output: >
+    A structured SWOT analysis containing:
+    - STRENGTHS: bulleted list with one sentence of evidence per item
+    - WEAKNESSES: bulleted list with one sentence of implication per item
+    - OPPORTUNITIES: bulleted list with one sentence linking to market data per item
+    - THREATS: bulleted list with one sentence linking to competitor or market risk per item
+    - A one-paragraph SWOT synthesis identifying the most critical S-O and W-T pairings
+
+
+action_plan_task:
+  description: >
+    Using the strategic brief and SWOT analysis from the previous tasks, create a
+    prioritized 90-day action plan for {company_name} in the {industry} market.
+    - Define 6-9 concrete actions organized into three 30-day phases
+    - Each action must state the objective, name the team or function responsible,
+      define a measurable success metric, and link back to a strategic insight or SWOT item
+    - Prioritize actions by impact vs effort (High Impact / Low Effort first)
+    - Flag any dependencies between actions
+  expected_output: >
+    A 90-day action plan containing:
+    - Phase 1 (Days 1-30): 2-3 quick-win actions
+    - Phase 2 (Days 31-60): 2-3 foundational build actions
+    - Phase 3 (Days 61-90): 2-3 growth or differentiation actions
+    Each action formatted as:
+    Action: [name] | Owner: [function] | Metric: [KPI] | Priority: [High/Medium] | Linked to: [insight or SWOT item]
+    - A closing paragraph on expected 90-day outcomes for {company_name}
+
+
+draft_report_task:
+  description: >
+    Using the strategy report provided below, write a complete first-draft competitive
+    intelligence report for {company_name} in the {industry} industry.
 
     STRATEGY REPORT: {strategy_report}
 
-    The Competitor Analysis section MUST include a profile for EVERY competitor in this list: {competitors}
-    Do not skip any competitor. Each profile must cover strengths, weaknesses, pricing, and market position.
+    The report must include all 6 sections with substantive content:
+    1. Executive Summary — 2-3 paragraph overview of findings and recommendations
+    2. Market Overview — size, growth rate, key trends, TAM/SAM
+    3. Competitor Analysis — a profile of EACH competitor in this list: {competitors}
+       Each profile must cover strengths, weaknesses, pricing, and market position
+    4. Strategic Insights — minimum 5 distinct, actionable insights
+    5. Risk Factors — minimum 3 specific risks with mitigation notes
+    6. Recommendations — concrete next steps prioritized by impact
+
+    Write in professional, executive-ready prose. Do not use placeholder text.
+  expected_output: >
+    A complete first-draft competitive intelligence report with all 6 sections
+    fully populated in professional prose. No filler, no placeholders.
+    Strategic Insights must have at least 5 items.
+    Risk Factors must have at least 3 items.
+    Competitor profiles must cover every competitor listed.
+
+
+fact_check_task:
+  description: >
+    Review the draft competitive intelligence report produced in the previous task.
+    Verify factual accuracy and completeness before final publication. Check for:
+    - Numerical claims (market size, growth rates, pricing) that appear unsupported
+      or inconsistent with the source research
+    - Missing or incomplete competitor profiles — every competitor in {competitors}
+      must be covered with all required dimensions
+    - Internal contradictions between sections
+    - Strategic recommendations not grounded in the research findings
+    - Sections that are too thin, vague, or use filler language
+    Produce an issues log, then deliver a corrected version of the report with all
+    identified issues resolved.
+  expected_output: >
+    An issues log listing each problem found (section, issue type, description),
+    followed by a corrected full report with all issues resolved.
+    If no issues are found, state "No issues found" and reproduce the full draft unchanged.
+    The corrected report must retain all 6 sections and meet the same completeness
+    standards as the draft.
+
+
+final_review_task:
+  description: >
+    Review the verified and fact-checked competitive intelligence report produced in the
+    previous task and produce the final, publication-ready version for {company_name}
+    in the {industry} industry.
+
+    The Competitor Analysis section MUST include a profile for EVERY competitor in
+    this list: {competitors}
+    Do not skip any competitor. Each profile must cover strengths, weaknesses, pricing,
+    and market position.
 
     The report must contain all 6 sections with substantive content:
     1. Executive Summary — 2-3 paragraph overview of findings and recommendations
     2. Market Overview — size, growth rate, key trends, TAM/SAM
-    3. Competitor Analysis — profile of EACH competitor listed above with strengths/weaknesses
+    3. Competitor Analysis — profile of EACH competitor listed above
     4. Strategic Insights — minimum 5 distinct, actionable insights
     5. Risk Factors — minimum 3 specific risks with mitigation notes
     6. Recommendations — concrete next steps prioritized by impact

@@ -67,6 +67,20 @@ class ReviewCrew:
         )
 
     @task
+    def draft_report_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["draft_report_task"],
+            agent=self.report_writer(),
+        )
+
+    @task
+    def fact_check_task(self) -> Task:
+        return Task(
+            config=self.tasks_config["fact_check_task"],
+            agent=self.fact_checker(),
+        )
+
+    @task
     def final_review_task(self) -> Task:
         return Task(
             config=self.tasks_config["final_review_task"],
